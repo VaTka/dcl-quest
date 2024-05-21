@@ -1,40 +1,33 @@
-import { Entity, pointerEventsSystem, InputAction, engine, MeshCollider, MeshRenderer, Transform } from "@dcl/sdk/ecs"
-import { Cube } from "./components"
+import { Entity, pointerEventsSystem, InputAction, engine } from "@dcl/sdk/ecs"
+
+export let uiClickCounter = 0
+export let uiText = ''
 
 export class QuestClicker {
     private chapterClicks = 0
     private currentChapter = 0
     private amountClicksByChapter: Array<number> = []
+    private entitysDetail: Array<Entity>
+    private text: string
     private resolveReady!: () => void
     private questDone: Promise<void>
-    private entitys: Array<Entity>
 
-    constructor() {
+    constructor(amountClicksByChapter: Array<number>, entitysDetail: any, text: string) {
+        this.text = text
+        this.entitysDetail = entitysDetail
+        this.amountClicksByChapter = amountClicksByChapter
         this.questDone = new Promise((res) => { this.resolveReady = res })
-        this.entitys = []
     }
 
-    public async startQuest(amountClicksByChapter: Array<number>, entitysDetail: any) {
-        this.entitys = this.createEntity(entitysDetail)
-        this.amountClicksByChapter = amountClicksByChapter
-        this.currentChapter = 0
-        this.chapterClicks = 0
-        this.entitys.forEach(entity => { this.attachClickEvent(entity) })
+    public async startQuest() {
+        uiClickCounter = this.amountClicksByChapter[this.currentChapter]
+        uiText = `${this.text}: ${uiClickCounter | 0}`
+        this.entitysDetail.forEach(entity => { 
+            this.attachClickEvent(entity) 
+        })
         await this.questDone
         this.questDone = new Promise(r => this.resolveReady = r)
-    }
-
-    private createEntity(position: any) {
-        let entitys: Array<Entity> = []
-        position.forEach((coordinates: Array<number>) => {
-            const entity = engine.addEntity()
-            Cube.create(entity)
-            Transform.create(entity, { position: { x: coordinates[0], y: coordinates[1], z: coordinates[2] } })
-            MeshRenderer.setBox(entity)
-            MeshCollider.setBox(entity)
-            entitys.push(entity)
-        })
-        return entitys
+        return true
     }
 
     private attachClickEvent(entity: Entity) {
@@ -47,6 +40,8 @@ export class QuestClicker {
                 },
             },
             () => {
+                uiClickCounter--
+                uiText = `${this.text}: ${uiClickCounter | 0}`
                 pointerEventsSystem.removeOnPointerDown(entity)
                 this.handleClick()
             }
@@ -60,15 +55,15 @@ export class QuestClicker {
             this.currentChapter++
             this.chapterClicks = 0
             console.log('You end chapter ', this.currentChapter)
-            if (this.currentChapter >= this.amountClicksByChapter.length) {
-                this.endQuest()
-            }
+            uiClickCounter = this.amountClicksByChapter[this.currentChapter]
+            uiText = `${this.text}: ${uiClickCounter | 0}`
+            if (this.currentChapter >= this.amountClicksByChapter.length) this.endQuest()
         }
     }
 
     private endQuest() {
         console.log('WIN');
-        this.entitys.forEach(entity => {
+        this.entitysDetail.forEach(entity => {
             pointerEventsSystem.removeOnPointerDown(entity)
             engine.removeEntity(entity)
         })

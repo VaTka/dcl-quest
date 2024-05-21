@@ -1,3 +1,8 @@
+import { QuestClicker } from "./Quests"
+import { createEntity } from "./createEntity"
+
+export let pointer = 0
+export let questUiVisible = false
 export const JsonTs = [
   {
     "text": "Welcome to the DAO Decentraland location! But it seems you've arrived a bit early; the official opening hasn't happened yet!",
@@ -51,7 +56,17 @@ export const JsonTs = [
     "text": "While you work, I'll wait for you here! Don't worry, I'll also be busy - I'll try to unravel the mystery of nature!",
     "isQuestion": false,
     "buttons": [],
-    "isEndOfDialog": true
+    "isEndOfDialog": true,
+    "triggeredByNext": async () => {
+      const entityCords = createEntity([[1, 1, 1], [4, 1, 1], [7, 1, 1], [10, 1, 1], [13, 1, 1]])
+      const myQuest = new QuestClicker([3, 2], entityCords, "My first day\n Need to collect seeds")
+      questUiVisible = true
+      pointer = 9
+      await myQuest.startQuest().then(() => {
+        questUiVisible = false
+        pointer = 12
+      });
+    },
   },
   {
     "text": "To find the seeds, run to the end of this garden, and you'll see boxes of seeds in the square.",
@@ -105,7 +120,17 @@ export const JsonTs = [
     "text": "Just don't tell him where you found the crystals \u2013 this little robot is a terrible sweet tooth!",
     "isQuestion": false,
     "buttons": [],
-    "isEndOfDialog": true
+    "isEndOfDialog": true,
+    "triggeredByNext": async () => {
+      const entityCords = createEntity([[1, 1, 8], [1, 1, 5]])
+      const myQuest = new QuestClicker([1, 1], entityCords, 'test')
+      questUiVisible = true
+      pointer = 18
+      await myQuest.startQuest().then(() => {
+        questUiVisible = false
+        pointer = 19
+      });
+    }
   },
   {
     "text": "In the energy zone, you can find many crystals - collect them and bring them to the robot.",

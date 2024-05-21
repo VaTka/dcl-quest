@@ -1,5 +1,7 @@
+import { Color4 } from '@dcl/sdk/math'
 import ReactEcs, { Button, Label, ReactEcsRenderer, UiEntity } from '@dcl/sdk/react-ecs'
 import * as npc from 'dcl-npc-toolkit'
+import { uiQuestList } from './questUi'
 
 export function setupUi() {
   ReactEcsRenderer.setUiRenderer(uiComponent)
@@ -12,7 +14,8 @@ const uiComponent = () => (
       height: '100%',
     }}
   >
-    <npc.NpcUtilsUi/>
+    {uiQuestList()}
+    <npc.NpcUtilsUi />
   </UiEntity>
-  
+
 )
