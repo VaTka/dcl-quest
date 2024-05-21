@@ -8,11 +8,11 @@ export class QuestClicker {
     private currentChapter = 0
     private amountClicksByChapter: Array<number> = []
     private entitysDetail: Array<Entity>
-    private text: string
+    private text: Array<string>
     private resolveReady!: () => void
     private questDone: Promise<void>
 
-    constructor(amountClicksByChapter: Array<number>, entitysDetail: any, text: string) {
+    constructor(amountClicksByChapter: Array<number>, entitysDetail: any, text: Array<string>) {
         this.text = text
         this.entitysDetail = entitysDetail
         this.amountClicksByChapter = amountClicksByChapter
@@ -21,7 +21,7 @@ export class QuestClicker {
 
     public async startQuest() {
         uiClickCounter = this.amountClicksByChapter[this.currentChapter]
-        uiText = `${this.text}: ${uiClickCounter | 0}`
+        uiText = `${this.text[this.currentChapter]}: ${uiClickCounter | 0}`
         this.entitysDetail.forEach(entity => { 
             this.attachClickEvent(entity) 
         })
@@ -41,7 +41,7 @@ export class QuestClicker {
             },
             () => {
                 uiClickCounter--
-                uiText = `${this.text}: ${uiClickCounter | 0}`
+                uiText = `${this.text[this.currentChapter]}: ${uiClickCounter | 0}`
                 pointerEventsSystem.removeOnPointerDown(entity)
                 this.handleClick()
             }
@@ -56,7 +56,7 @@ export class QuestClicker {
             this.chapterClicks = 0
             console.log('You end chapter ', this.currentChapter)
             uiClickCounter = this.amountClicksByChapter[this.currentChapter]
-            uiText = `${this.text}: ${uiClickCounter | 0}`
+            uiText = `${this.text[this.currentChapter]}: ${uiClickCounter | 0}`
             if (this.currentChapter >= this.amountClicksByChapter.length) this.endQuest()
         }
     }

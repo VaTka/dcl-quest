@@ -59,7 +59,8 @@ export const JsonTs = [
     "isEndOfDialog": true,
     "triggeredByNext": async () => {
       const entityCords = createEntity([[1, 1, 1], [4, 1, 1], [7, 1, 1], [10, 1, 1], [13, 1, 1]])
-      const myQuest = new QuestClicker([3, 2], entityCords, "My first day\n Need to collect seeds")
+      const text = ["My first day\n Need to collect seeds", "My first day\n Plant trees"]
+      const myQuest = new QuestClicker([3, 2], entityCords, text)
       questUiVisible = true
       pointer = 9
       await myQuest.startQuest().then(() => {
@@ -123,7 +124,7 @@ export const JsonTs = [
     "isEndOfDialog": true,
     "triggeredByNext": async () => {
       const entityCords = createEntity([[1, 1, 8], [1, 1, 5]])
-      const myQuest = new QuestClicker([1, 1], entityCords, 'test')
+      const myQuest = new QuestClicker([1, 1], entityCords, ['My first day\n test', 'My first day\n test2'])
       questUiVisible = true
       pointer = 18
       await myQuest.startQuest().then(() => {
