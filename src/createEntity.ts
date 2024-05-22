@@ -1,7 +1,7 @@
 import { Entity, engine, Transform, MeshRenderer, MeshCollider } from "@dcl/sdk/ecs"
 import { Cube } from "./components"
 
-export const createEntity = (position: any) => {
+export const createEntity = (position: Array<Array<number>>) => {
     let entitys: Array<Entity> = []
     position.forEach((coordinates: Array<number>) => {
         const entity = engine.addEntity()

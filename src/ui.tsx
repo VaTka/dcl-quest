@@ -1,5 +1,4 @@
-import { Color4 } from '@dcl/sdk/math'
-import ReactEcs, { Button, Label, ReactEcsRenderer, UiEntity } from '@dcl/sdk/react-ecs'
+import ReactEcs, { ReactEcsRenderer, UiEntity } from '@dcl/sdk/react-ecs'
 import * as npc from 'dcl-npc-toolkit'
 import { uiQuestList } from './questUi'
 
