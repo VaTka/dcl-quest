@@ -1,6 +1,6 @@
-import ReactEcs, { ReactEcsRenderer, UiEntity } from '@dcl/sdk/react-ecs'
+import ReactEcs, { Input, ReactEcsRenderer, UiEntity } from '@dcl/sdk/react-ecs'
 import * as npc from 'dcl-npc-toolkit'
-import { uiQuestList } from './questUi'
+import { uiQuestInput, uiQuestList } from './questUi'
 
 export function setupUi() {
   ReactEcsRenderer.setUiRenderer(uiComponent)
@@ -13,6 +13,7 @@ const uiComponent = () => (
       height: '100%',
     }}
   >
+    {uiQuestInput()}
     {uiQuestList()}
     <npc.NpcUtilsUi />
   </UiEntity>

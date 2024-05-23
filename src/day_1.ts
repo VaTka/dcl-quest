@@ -1,8 +1,12 @@
+import * as npc from 'dcl-npc-toolkit'
+import { myNPC } from "."
 import { QuestClicker } from "./Quests"
-import { createEntity } from "./createEntity"
+import { Vector3 } from '@dcl/sdk/math'
+import { bucket, createEntity, getQuestInputValue, setUiQuestText } from './questHandler'
 
 export let pointer = 0
 export let questUiVisible = false
+
 export const JsonTs = [
   {
     "text": "Welcome to the DAO Decentraland location! But it seems you've arrived a bit early; the official opening hasn't happened yet!",
@@ -58,18 +62,31 @@ export const JsonTs = [
     "buttons": [],
     "isEndOfDialog": true,
     "triggeredByNext": async () => {
+      let test = await getQuestInputValue("My question is very easy")
+      console.log(test);
+
       let entityCords = createEntity([[1, 1, 1], [4, 1, 1], [7, 1, 1], [10, 1, 1], [13, 1, 1]])
       let myQuest = new QuestClicker(5, entityCords, "My first day\n Need to collect seeds", () => { })
       questUiVisible = true
       pointer = 9
-      await myQuest.startQuest(2)
+      await myQuest.startQuest({resourceAmount: 2, reqCallback: bucket})
+
+      // let test2 = await getQuestInputValue()
+      // console.log(test2);
 
       entityCords = createEntity([[1, 1, 1], [4, 1, 1], [7, 1, 1], [10, 1, 1], [13, 1, 1]])
       myQuest = new QuestClicker(5, entityCords, "My first day\n Plant trees", () => { })
-      await myQuest.startQuest();
-      questUiVisible = false
-      pointer = 12
+      await myQuest.startQuest()
+      setUiQuestText("Follow NPC")
 
+      // npc.playAnimation(myNPC, `Head_Yes`, true, 2.63)
+      npc.followPath(myNPC, {
+        path: [Vector3.create(5, 0, 5), Vector3.create(3, 0, 7)],
+        onFinishCallback: () => {
+          pointer = 12
+        },
+        totalDuration: 5
+      })
     },
   },
   {
@@ -130,10 +147,9 @@ export const JsonTs = [
       const myQuest = new QuestClicker(2, entityCords, 'My first day\n test', () => { console.log('CLICK') }, () => { console.log("WIN WIN") })
       questUiVisible = true
       pointer = 18
-      await myQuest.startQuest().then(() => {
-        questUiVisible = false
-        pointer = 19
-      });
+      await myQuest.startQuest()
+      questUiVisible = false
+      pointer = 19
     }
   },
   {
